@@ -9,6 +9,8 @@ DEPLOYMENTFOLDERS += assetsFolder
 
 # Add more folders to ship with the application here
 
+QT += qml quick widgets network
+
 RESOURCES += #    resources.qrc # uncomment for publishing
 
 # NOTE: for PUBLISHING, perform the following steps:
@@ -22,7 +24,8 @@ RESOURCES += #    resources.qrc # uncomment for publishing
 
 
 # The .cpp file which was generated for your project. Feel free to hack it.
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    weather.cpp
 
 android {
     ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
@@ -42,3 +45,6 @@ win32 {
 macx {
     ICON = macx/app_icon.icns
 }
+
+HEADERS += \
+    weather.h
