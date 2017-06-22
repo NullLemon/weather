@@ -222,7 +222,7 @@ App {
             Connections{
                 target: WeatherInfo
                 onFinished:{
-                    weatherIcon.source ="http://openweathermap.org/img/w/" + weatherData["weather"][0]["icon"] + ".png";
+                    weatherIcon.source ="http://openweathermap.org/img/w/" + weatherData["list"][0]["weather"][0]["icon"] + ".png";
                 }
             }
             anchors.fill: parent.Center
@@ -239,8 +239,8 @@ App {
                 if(message == "OK")
                 {
                     labelName.text = "    "+search.text;
-                    tem.text =(weatherData["main"]["temp"] / 10).toFixed(2)+"℃";
-                    shidu.text = "    湿度: " + weatherData["main"]["humidity"].toFixed(1);
+                    tem.text =(weatherData["list"][0]["main"]["temp"] / 10).toFixed(2)+"℃";
+                    shidu.text = "    湿度: " + weatherData["list"][0]["main"]["humidity"].toFixed(1);
 
                 }
             }
@@ -274,7 +274,7 @@ App {
                     Connections{
                         target: WeatherInfo
                         onFinished:{
-                            weather.text =weatherData["weather"][0]["description"];
+                            weather.text =weatherData["list"][0]["weather"][0]["description"];
                         }
                     }
                 }
