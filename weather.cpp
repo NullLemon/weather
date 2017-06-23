@@ -9,7 +9,7 @@ weatherInfo::weatherInfo(void)
 void weatherInfo::fetchWeather(const QString &cityName)
 {
     //Actually, we can set cnt number to show how many citys wo want to get, but it shoud not go beyond 16.
-    manager.get(QNetworkRequest(QUrl(QString("http://api.openweathermap.org/data/2.5/forecast?q=%1&lang=zh_cn&cnt=5&APPID=b17da5e7262350abbce791732057902d").arg(cityName))));
+    manager.get(QNetworkRequest(QUrl(QString("http://api.openweathermap.org/data/2.5/forecast?q=%1&mode=json&units=metric&lang=zh_cn&cnt=4&APPID=6b55db98c0b1a112f1f98bd93e4726ac").arg(cityName))));
 }
 
 void weatherInfo::startInquiry(const QString &cityName)

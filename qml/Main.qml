@@ -6,6 +6,7 @@ App {
 
     id:app
     property var n: 0
+    property var a : 0
     Rectangle {
         anchors.fill: parent
 
@@ -239,7 +240,7 @@ App {
                 if(message == "OK")
                 {
                     labelName.text = "    "+search.text;
-                    tem.text =(weatherData["list"][0]["main"]["temp"] / 10).toFixed(2)+"℃";
+                    tem.text =weatherData["list"][0]["main"]["temp"]+"℃";
                     shidu.text = "    湿度: " + weatherData["list"][0]["main"]["humidity"].toFixed(1);
 
                 }
@@ -297,6 +298,8 @@ App {
         Component.onCompleted: {
             n = getDate(n);
         }
+
+
         Grid{
             id:bottomGrid
             rows: 7
@@ -307,30 +310,46 @@ App {
 
             Repeater{
                 model: [
-                    {day:"今天",high: 34, low: 24, icon: IconType.suno},
-                    {day:"明天",high:34,low:24,icon:IconType.suno},
-                    {day:getCurDate(n+2),high:27,low:23,icon:IconType.cloud},
-                    {day:getCurDate(n+3),high:29,low:25,icon:IconType.cloud},
-                    {day:getCurDate(n+4),high:27,low:23,icon:IconType.rocket},
+                    {day:"今天",i:0},
+                    {day:"明天",i:1},
+                    {day:getCurDate(n+2),i:2},
+                    {day:getCurDate(n+3),i:3},
                 ]
 
                 Row{
-                    spacing: dp(70)
+//                    width:bottomGrid.width
+                    spacing: dp(40)
                     height: bottomGrid.height/4
                     AppText {
                         text: modelData.day
                         font.pixelSize: sp(14)
                     }
 
-                    Icon{
-                        icon:modelData.icon
-                        color:"white"
-                        size: dp(20)
+                    AppImage{
+                        id:gridImage
+                        Connections{
+                            target: WeatherInfo
+                            onFinished:{
+                                var n = modelData.i
+                                gridImage.source ="http://openweathermap.org/img/w/" + weatherData["list"][n]["weather"][0]["icon"] + ".png";
+                            }
+                        }
+                       height: dp(30)
+                       width: dp(30)
+
                     }
 
                     AppText{
-                        text: modelData.high+"°/"+modelData.low+"°"
+                        id:gridText
+                        Connections{
+                            target: WeatherInfo
+                            onFinished:{
+                                var n = modelData.i
+                                gridText.text = (weatherData["list"][n]["main"]["temp_max"]).toFixed(2)+"℃" + "/" +(weatherData["list"][n]["main"]["temp_min"]).toFixed(2)+"℃"
+                            }
+                        }
                         color: "lightblue"
+                        font.pixelSize: sp(14)
                     }
                 }
             }
@@ -338,14 +357,16 @@ App {
 
         AppText{
             id:weatherText
-            text: "5天天气预报"
+            text: "4天天气预报"
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom:bottomGrid.top
             anchors.margins: 5
             font.pixelSize: dp(12)
             x:Math.min(parent.width - dp(170), dp(450))
+            color: "white"
         }
     }
 }
+
 
 

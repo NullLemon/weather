@@ -13,12 +13,6 @@ int main(int argc, char *argv[])
 
     vplay.setPreservePlatformFonts(true);
 
-//    qmlRegisterType<weatherInfo>(
-//                "WeatherInfo",
-//                1,
-//                0,
-//                "WeatherInfo");
-
     QQmlApplicationEngine engine;
 
     engine.rootContext()->setContextProperty("WeatherInfo", new weatherInfo);
