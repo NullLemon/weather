@@ -35,37 +35,13 @@ Page{
         source : "../assets/0.png"
         smooth: true
         anchors.fill: parent
-        //        Connections{
-        //            target: WeatherInfo
-        //            onFinished:{
-
-        //            }
-        //        }
     }
 
     AppFlickable {
         id:scroll
         anchors.fill: parent
-        contentHeight:1200
-
-        SearchBar{
-            id:search
-            icon:IconType.search
-            barBackgroundColor:"transparent"
-            inputBackgroundColor: "transparent"
-            placeHolderText: "请输入城市名"
-            onAccepted:{
-                WeatherInfo.startInquiry(search.text.toString())
-                a = search.text.toString()
-            }
-        }
-        IconButton{
-            icon: IconType.plus
-            anchors.right: parent.right
-            y:dp(1)
-            onClicked:{var object=Qt.createComponent("CityList.qml").createObject(app)}
-        }
-
+        contentHeight: column.height + weatherIcon.height + middleRow.height + bottomGrid.height + line.height + details.height + 350
+        clip: true
         AppImage{
             id:weatherIcon
             Connections{
@@ -77,7 +53,7 @@ Page{
             anchors.fill: parent.Center
             anchors.top: column.bottom
             anchors.margins: dp(10)
-            y:dp(150)
+            //            y:dp(150)
             anchors.horizontalCenter:parent.horizontalCenter
             width: dp(120)
             height: dp(100)
@@ -88,7 +64,7 @@ Page{
                 if(message == "OK")
                 {
                     labelName.text =weatherData["HeWeather5"][0]["basic"]["city"]+" |";
-                    tem.text =weatherData["HeWeather5"][0]["now"]["tmp"]+"°";
+                    tem.text =weatherData["HeWeather5"][0]["now"]["tmp"]+"℃";
                     dam.text =weatherData["HeWeather5"][0]["now"]["hum"]
                     windSpeed.text = weatherData["HeWeather5"][0]["now"]["wind"]["spd"]
                     windDir.text = weatherData["HeWeather5"][0]["now"]["wind"]["dir"]
@@ -111,7 +87,7 @@ Page{
             anchors.leftMargin: 30
             //温度
             AppText{
-                font.pixelSize: app.sp(50)
+                font.pixelSize: sp(50)
                 id:tem
                 text:"waiting..."
                 color: "white"
@@ -143,10 +119,12 @@ Page{
         }
         Component.onCompleted: {
             n = getDate(n)
+            importCity(arry,a)
+            WeatherInfo.startInquiry(arry[0])
         }
         Row{
             id:middleRow
-            spacing: dp(25)
+            spacing: dp(23)
             //                y:dp(58)
             anchors.bottom:bottomGrid.top
             anchors.margins: 25
@@ -156,14 +134,14 @@ Page{
                 AppText{
                     id:windDir
                     text:""
-                    font.pixelSize: sp(15)
+                    font.pixelSize: sp(19)
                     color:"white"
                 }
 
                 AppText{
                     id:windSpeed
                     text: ""
-                    font.pixelSize: sp(19)
+                    font.pixelSize: sp(15)
                     //                    x:Math.min(parent.width - dp(170), dp(450))
                     color: "white"
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -174,7 +152,7 @@ Page{
                     id:symbol1
                     text: ""
                     color: "white"
-                    font.pixelSize: sp(34)
+                    font.pixelSize: sp(35)
 
                 }
             }
@@ -183,14 +161,14 @@ Page{
                 AppText{
                     id:damLabel
                     text:""
-                    font.pixelSize: sp(15)
+                    font.pixelSize: sp(19)
                     color: "white"
                 }
 
                 AppText{
                     id:dam
                     text:""
-                    font.pixelSize: sp(19)
+                    font.pixelSize: sp(15)
                     color: "white"
                     anchors.horizontalCenter: parent.horizontalCenter
                 }
@@ -201,7 +179,7 @@ Page{
                     id:symbol2
                     text: ""
                     color: "white"
-                    font.pixelSize: sp(34)
+                    font.pixelSize: sp(35)
                 }
             }
 
@@ -210,7 +188,7 @@ Page{
                 AppText{
                     id:airLaber
                     text:""
-                    font.pixelSize: sp(15)
+                    font.pixelSize: sp(19)
                     color: "white"
                 }
 
@@ -218,7 +196,7 @@ Page{
                     anchors.horizontalCenter: parent.horizontalCenter
                     id:air
                     text:""
-                    font.pixelSize: sp(19)
+                    font.pixelSize: sp(15)
                     color:"white"
                 }
             }
@@ -228,8 +206,8 @@ Page{
         Grid{
             id:bottomGrid
             rows: 3
-            spacing: app.dp(2)
-            height: Math.min(parent.width - dp(150), dp(450))
+            spacing: dp(2)
+            height: Math.min(parent.width - dp(200), dp(400))
             y:dp(300)
             anchors.horizontalCenter: parent.horizontalCenter
 
@@ -242,12 +220,12 @@ Page{
 
                 Row{
                     //                    width:bottomGrid.width
-                    spacing: dp(40)
+                    spacing: dp(60)
                     height: bottomGrid.height/3
                     AppText {
                         id:day
                         text:""
-                        font.pixelSize: sp(14)
+                        font.pixelSize: sp(17)
                         color: "white"
                         anchors.verticalCenter: parent.verticalCenter
                     }
@@ -262,8 +240,8 @@ Page{
                                 day.text = modelData.day
                             }
                         }
-                        height: dp(30)
-                        width: dp(30)
+                        height: dp(35)
+                        width: dp(35)
                         anchors.verticalCenter: parent.verticalCenter
                     }
 
@@ -277,16 +255,28 @@ Page{
                             }
                         }
                         color: "white"
-                        font.pixelSize: sp(14)
+                        font.pixelSize: sp(17)
                         anchors.verticalCenter: parent.verticalCenter
                     }
                 }
             }
         }  //Grid
+
+        Rectangle{
+            id:line
+            width: mainPage.width - dp(10)
+            height: 1
+            color: "gray"
+            anchors.top: bottomGrid.bottom
+            anchors.topMargin: dp(10)
+            anchors.horizontalCenter: parent.horizontalCenter
+        }
+
         Row{
             id:details
             spacing: 4
-            anchors.top:bottomGrid.bottom
+            anchors.top:line.bottom
+            anchors.topMargin: dp(10)
             anchors.horizontalCenter: parent.horizontalCenter
 
             Column{
@@ -312,49 +302,49 @@ Page{
                 AppText{
                     id: sunrise
                     anchors.right: explain.right
-                    font.pixelSize: sp(12)
+                    font.pixelSize: sp(14)
                     color: "white"
                 }
                 AppText{
                     id: sunset
                     anchors.right: explain.right
-                    font.pixelSize: sp(12)
+                    font.pixelSize: sp(14)
                     color: "white"
                 }
                 AppText{
                     id: rainfallprobabillty
                     anchors.right: explain.right
-                    font.pixelSize: sp(12)
+                    font.pixelSize: sp(14)
                     color: "white"
                 }
                 AppText{
                     id: rainfall
                     anchors.right: explain.right
-                    font.pixelSize: sp(12)
+                    font.pixelSize: sp(14)
                     color: "white"
                 }
                 AppText{
                     id: aqi
                     anchors.right: explain.right
-                    font.pixelSize: sp(12)
+                    font.pixelSize: sp(14)
                     color: "white"
                 }
                 AppText{
                     id: pm25
                     anchors.right: explain.right
-                    font.pixelSize: sp(12)
+                    font.pixelSize: sp(14)
                     color: "white"
                 }
                 AppText{
                     id: pressure
                     anchors.right: explain.right
-                    font.pixelSize: sp(12)
+                    font.pixelSize: sp(14)
                     color: "white"
                 }
                 AppText{
                     id: conspicurity
                     anchors.right: explain.right
-                    font.pixelSize: sp(12)
+                    font.pixelSize: sp(14)
                     color: "white"
                 }
             }
@@ -381,54 +371,118 @@ Page{
                 AppText{
                     id: sunrisedata
                     text: "..."
-                    font.pixelSize: sp(12)
+                    font.pixelSize: sp(14)
                     color: "white"
                 }
                 AppText{
                     id: sunsetdata
                     text: "..."
-                    font.pixelSize: sp(12)
+                    font.pixelSize: sp(14)
                     color: "white"
                 }
                 AppText{
                     id: rainfallprobabilltydata
                     text: "..."
-                    font.pixelSize: sp(12)
+                    font.pixelSize: sp(14)
                     color: "white"
                 }
                 AppText{
                     id: rainfalldata
                     text: "..."
-                    font.pixelSize: sp(12)
+                    font.pixelSize: sp(14)
                     color: "white"
                 }
                 AppText{
                     id: aqidata
                     text: "..."
-                    font.pixelSize: sp(12)
+                    font.pixelSize: sp(14)
                     color: "white"
                 }
                 AppText{
                     id: pm25data
                     text: "..."
-                    font.pixelSize: sp(12)
+                    font.pixelSize: sp(14)
                     color: "white"
                 }
                 AppText{
                     id: pressuredata
                     text: "..."
-                    font.pixelSize: sp(12)
+                    font.pixelSize: sp(14)
                     color: "white"
                 }
                 AppText{
                     id: conspicuritydata
                     text: "..."
-                    font.pixelSize: sp(12)
+                    font.pixelSize: sp(14)
                     color: "white"
                 }
             }
 
         }
 
+        Rectangle{
+            id:linetwo
+            width: mainPage.width - dp(10)
+            height: 1
+            color: "gray"
+            anchors.bottom: sourse.top
+            //           anchors.bottomMargin: dp(10)
+            anchors.horizontalCenter: parent.horizontalCenter
+        }
+        AppText{
+            id:sourse
+            text:"数据来源：和风天气API"
+            font.pixelSize: sp(7)
+            color: "gray"
+            anchors.bottom:  parent.bottom
+            anchors.bottomMargin: dp(10)
+            anchors.horizontalCenter: parent.horizontalCenter
+        }
+
+    }//Flickable
+
+    SearchBar{
+        id:search
+        icon:IconType.search
+        barBackgroundColor:"transparent"
+        inputBackgroundColor: "transparent"
+        placeHolderText: "请输入城市名"
+        onAccepted:{
+            WeatherInfo.startInquiry(search.text.toString())
+            a = search.text.toString()
+        }
+    }
+
+    IconButton{
+        id:plusCity
+        icon: IconType.plus
+        anchors.left: parent.left
+        anchors.bottom: parent.bottom
+        y:dp(1)
+        onClicked:{
+            var object=Qt.createComponent("CityList.qml").createObject(app)
+ //           object.z = 4
+            }
+    }
+
+    IconButton{
+        icon: IconType.list
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        y:dp(1)
+        //onClicked:{var object=Qt.createComponent("CityList.qml").createObject(app)}
+    }
+
+    PageControl{
+        id:pageControl
+        pages: imgSwipeView.count
+        pageIcons: ({
+          0: IconType.home
+                    })
+        clickableIndicator: true
+        spacing: dp(10)
+        anchors.top: parent.top
+        anchors.bottomMargin: dp(15)
+        anchors.horizontalCenter: parent.horizontalCenter
     }
 }

@@ -22,7 +22,6 @@ public slots:
 
 private slots:
     void onGetWeather(QNetworkReply *reply);
-
 signals:
     void finished(const QString message, const QJsonObject weatherData);
 

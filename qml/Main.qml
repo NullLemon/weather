@@ -1,6 +1,7 @@
 import VPlayApps 1.0
 import QtQuick 2.0
-
+import QtQuick.LocalStorage 2.0
+import QtQuick.Controls 2.0 as Quick2
 
 App {
 
@@ -8,6 +9,8 @@ App {
     property var n: 0
     property var a
     property var w: 0
+    property var arry :[]
+    property var i : 0
     //    Component { id: listsPageComponent; CityList{}}
 
     function getDate(n)
@@ -27,7 +30,7 @@ App {
 
     function getCurDate(n)
     {
-//                var d = new Date();
+        //                var d = new Date();
         var week;
         switch (n){
         case 1: week="周一"; return week;
@@ -46,9 +49,10 @@ App {
         case 14:week="周天"; return week;
         }
     }
+
     function getWeatherCode(c){
         var code = Number(c);
-//        console.log("this is is is is  " + code)
+        //        console.log("this is is is is  " + code)
 
         if(code === 100){
             return 1;
@@ -69,6 +73,78 @@ App {
         }
     }
 
-    MainPage{}
+    function arryEmpty(arry,i,text){
+        while(arry[i]){
+            console.log(arry[i])
+            i++
+        }
+        arry[i] = text
+        console.log(i)
+    }
+
+    function saveCity(arry,a) {
+        var db = LocalStorage.openDatabaseSync("CityDataBase", "1.0", "The save of city!", 10000);
+        db.transaction(
+                    function(tx) {
+                        var i = 0
+                        // Create the database if it doesn't already exist
+                        var rs = tx.executeSql('DROP TABLE ' + "City1")
+                        tx.executeSql('CREATE TABLE IF NOT EXISTS City1(name text)');
+                        // Add (another) greeting row
+                        while(arry[i]){
+                            tx.executeSql('INSERT INTO City1 VALUES(?)',[arry[i]]);
+                            console.log(arry[i])
+                            i++;
+                        }
+
+                    }
+                    )
+    }
+
+    function importCity(arry,a){
+        var db = LocalStorage.openDatabaseSync("CityDataBase", "1.0", "The save of city!", 10000);
+        db.transaction(
+                    function(tx){
+                        var i = 0;
+                        tx.executeSql('CREATE TABLE IF NOT EXISTS City1(name text)');
+                        var rs = tx.executeSql('Select name from City1');
+                        var r = []
+                        for(var n = 0;n < rs.rows.length;n++){
+                            arry[n ]= rs.rows.item(n).name
+                            //                            console.log("++++++++++" + rs.rows.item(n).name)
+                        }
+                    }
+                    )
+    }
+
+    //    function dropCity(arry){
+    //        var db = LocalStorage.openDatabaseSync("CityDataBase", "1.0", "The save of city!", 10000);
+    //        db.transaction(
+    //                    function(tx){
+    //                        tx.executeSql('CREATE TABLE IF NOT EXISTS City1(name text)');
+    //                        var rs = tx.executeSql('delete from City1 where name=?',[arry])
+    //                    }
+    //                    )
+    //    }
+
+    FontLoader { id: normalFont; source: "fonts/fonts.ttf" }
+
+    onInitTheme: {
+        //      Theme.colors.textColor = "white"
+        //      Theme.colors.statusBarStyle = Theme.colors.statusBarStyleHidden
+        Theme.normalFont = normalFont
+    }
+
+    Quick2.SwipeView{
+        id: imgSwipeView
+        width: parent.width
+        height: parent.height
+        Item {
+            MainPage{}
+        }
+//        Item {
+//            MainPage{}
+//        }
+    }
 
 }

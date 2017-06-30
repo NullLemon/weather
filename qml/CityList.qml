@@ -1,8 +1,11 @@
 import QtQuick 2.0
 import VPlayApps 1.0
 
+
+
 NavigationStack{
     id:stac
+    property var choose: 0
     ListPage {
         id: page
 
@@ -14,21 +17,32 @@ NavigationStack{
             }
         }
 
-        rightBarItem: IconButtonBarItem {
-            icon: IconType.plus
 
+
+        rightBarItem:IconButtonBarItem {
+            icon: IconType.plus
             onClicked: {
-                InputDialog.inputTextMultiLine(page,qsTr("New city"), qsTr("Enter text..."),
-                                               function(ok, text) {
-                                                   page.model.push({ text:text })
-                                                   page.modelChanged()
-                                                   var db = openDatabaseSync(text)
-                                               })
+                InputDialog.inputTextSingleLine(page,qsTr("New city"), qsTr("Enter text..."),
+                                                function(ok, text) {
+                                                    page.model.push({ text:text })
+                                                    arryEmpty(arry,i,text)
+//                                                    ++i
+                                                    page.modelChanged()
+                                                    saveCity(arry,a)
+                                                })
 
 
             }
         }
 
+        Component.onCompleted: {
+            var n = 0
+            while(arry[n]){
+                page.model.push({text:arry[n].toString()})
+                n++
+            }
+            page.modelChanged()
+        }
 
         model: []
 
@@ -39,15 +53,23 @@ NavigationStack{
                 text: qsTr("Delete")
                 onClicked: {
                     container.hideOptions()
+                    arry.splice(index,1)
+                    saveCity(arry)
                     page.model.splice(index, 1)
                     page.modelChanged()
+
                 }
             }
 
             SimpleRow {
                 onSelected: {
+                    //                    i = index
                     var object=Qt.createComponent("MainPage.qml").createObject(app);
                     WeatherInfo.startInquiry(page.model[index].text)
+                    a = page.model[index].text
+//                    console.log("123123" + a)
+//                    saveCity(arry,a)
+
                 }
             }
         }

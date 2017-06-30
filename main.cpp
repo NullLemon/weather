@@ -4,6 +4,7 @@
 #include <QQmlApplicationEngine>
 #include <QtQml>
 #include "weather.h"
+#include <QSqlDatabase>
 
 
 int main(int argc, char *argv[])
