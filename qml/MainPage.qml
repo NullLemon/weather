@@ -41,7 +41,7 @@ Page{
         id:scroll
         anchors.fill: parent
         contentHeight: column.height + weatherIcon.height + middleRow.height + bottomGrid.height + line.height + details.height + 350
-        clip: true
+
         AppImage{
             id:weatherIcon
             Connections{
@@ -454,14 +454,11 @@ Page{
     }
 
     IconButton{
-        id:plusCity
         icon: IconType.plus
         anchors.left: parent.left
         anchors.bottom: parent.bottom
         y:dp(1)
-        onClicked:{
-            var object=Qt.createComponent("CityList.qml").createObject(app)
- //           object.z = 4
+        onClicked:{var object=Qt.createComponent("CityList.qml").createObject(app)
             }
     }
 

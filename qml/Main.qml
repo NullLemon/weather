@@ -2,7 +2,6 @@ import VPlayApps 1.0
 import QtQuick 2.0
 import QtQuick.LocalStorage 2.0
 import QtQuick.Controls 2.0 as Quick2
-
 App {
 
     id:app
@@ -75,11 +74,11 @@ App {
 
     function arryEmpty(arry,i,text){
         while(arry[i]){
-            console.log(arry[i])
+//            console.log(arry[i]+ "jiu" + i)
             i++
         }
         arry[i] = text
-        console.log(i)
+//        console.log(i)
     }
 
     function saveCity(arry,a) {
@@ -87,16 +86,14 @@ App {
         db.transaction(
                     function(tx) {
                         var i = 0
-                        // Create the database if it doesn't already exist
                         var rs = tx.executeSql('DROP TABLE ' + "City1")
                         tx.executeSql('CREATE TABLE IF NOT EXISTS City1(name text)');
                         // Add (another) greeting row
                         while(arry[i]){
                             tx.executeSql('INSERT INTO City1 VALUES(?)',[arry[i]]);
-                            console.log(arry[i])
+//                            console.log(arry[i])
                             i++;
                         }
-
                     }
                     )
     }
@@ -113,6 +110,7 @@ App {
                             arry[n ]= rs.rows.item(n).name
                             //                            console.log("++++++++++" + rs.rows.item(n).name)
                         }
+
                     }
                     )
     }
@@ -135,6 +133,7 @@ App {
         Theme.normalFont = normalFont
     }
 
+//    MainPage{}
     Quick2.SwipeView{
         id: imgSwipeView
         width: parent.width
@@ -142,9 +141,11 @@ App {
         Item {
             MainPage{}
         }
-//        Item {
-//            MainPage{}
-//        }
+        Item {
+            Component.onCompleted: {
+                weatherInfo.startInquiry(arry[1])
+            }
+            MainPage{}
+        }
     }
-
 }

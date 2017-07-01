@@ -14,6 +14,7 @@ NavigationStack{
             icon: IconType.close
             onClicked: {var object=Qt.createComponent("MainPage.qml").createObject(app)
                 WeatherInfo.startInquiry(a)
+
             }
         }
 
@@ -26,9 +27,9 @@ NavigationStack{
                                                 function(ok, text) {
                                                     page.model.push({ text:text })
                                                     arryEmpty(arry,i,text)
-//                                                    ++i
-                                                    page.modelChanged()
                                                     saveCity(arry,a)
+                                                    page.modelChanged()
+
                                                 })
 
 
@@ -54,8 +55,8 @@ NavigationStack{
                 onClicked: {
                     container.hideOptions()
                     arry.splice(index,1)
-                    saveCity(arry)
                     page.model.splice(index, 1)
+                    saveCity(arry)
                     page.modelChanged()
 
                 }
@@ -67,8 +68,9 @@ NavigationStack{
                     var object=Qt.createComponent("MainPage.qml").createObject(app);
                     WeatherInfo.startInquiry(page.model[index].text)
                     a = page.model[index].text
-//                    console.log("123123" + a)
-//                    saveCity(arry,a)
+                    console.log("123456" + a)
+                    //                    console.log("123123" + a)
+                    //                    saveCity(arry,a)
 
                 }
             }

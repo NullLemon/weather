@@ -39,4 +39,3 @@ void weatherInfo::onGetWeather(QNetworkReply *reply)
 
 }
 
-
